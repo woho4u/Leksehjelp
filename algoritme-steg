@@ -1,10 +1,18 @@
-Lag en enkel liste med lekser, som lagres til localstorage
-Lag et komponent som henter ut listen med lekser, og viser denne på siden
-legg til kryss av bokser, som fjerner leksen fra listen
-legg til grunnleggende funksjon for å legge til en lekse i localstorage listen
-lag et felt med en knapp som kaller på legg til funksjonen med leksen
+% Lag en enkel liste med lekser, som lagres til localstorage
+% Lag et komponent som henter ut listen med lekser, og viser denne på siden
+% legg til kryss av bokser, som fjerner leksen fra listen
+% legg til grunnleggende funksjon for å legge til en lekse i localstorage listen
+% lag et felt med en knapp som kaller på legg til funksjonen med leksen
+% legg til en endre knapp, som gjør at du kan skrive om på lekser, og lagre
 legg til "due" verdi til leksene 
-legg til en endre knapp, som gjør at du kan skrive om på lekser, og lagre
 Test all funksjonalitet applikasjonen
 fiks bakgrunn, css, og tweak brukervennligheten
 Test all funksjonalitet
+
+Error:
+Når man sletter en lekse i redigering modus blir 
+siste lekse alltid slettet.
+
+Error:
+når man har slettet en lekse og går i redigering modus, 
+kommer leksen tilbake fordi den har samme index
