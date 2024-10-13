@@ -1,79 +1,121 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import AddLekse from "./AddLekse";
-import Lekse from "./Lekse";
+// import Lekse from "./Lekse";
 
 const Lekseliste = () => {
-   const [lekser, setLekser] = useState<string[]>(["Lekse 1", "Lekse 2", "Lekse 3"]); // Explicitly define the type
-   const [isEditing, setIsEditing] = useState(false);
-   const [newLekser, setNewLekser] = useState<string[]>([]);
+   const [lekser, setLekser] = useState<string[]>(() => {
+      const storedLekser = localStorage.getItem("lekser");
+      return storedLekser ? JSON.parse(storedLekser) : [];
+   });
+   // const [editState, setEditState] = useState(false);
+   const [editingLekse, setEditingLekse] = useState<number | undefined>(undefined);
+   const [editingText, setEditingText] = useState<string>("");
 
    useEffect(() => {
       localStorage.setItem("lekser", JSON.stringify(lekser));
    }, [lekser]);
 
-   useEffect(() => {
-      const storedLekser = localStorage.getItem("lekser");
-      let parsedLekser: string[] = [];
-      console.log("storedLekser", storedLekser);
-
-      if (storedLekser) {
-         try {
-            parsedLekser = JSON.parse(storedLekser);
-         } catch (error) {
-            console.error("Error parsing stored lekser:", error);
-            parsedLekser = [];
-         }
-      }
-      console.log("parsedLekser", parsedLekser);
-   }, []);
-
-   const removeLekse = (lekseToRemove: string) => {
-      setLekser((prevLekser) => {
-         const updatedLekser = prevLekser.filter((lekse) => lekse !== lekseToRemove);
-         return updatedLekser;
-      });
-   };
-
    const addLekse = (lekse: string) => {
-      setLekser((prevLekser) => {
-         const updatedLekser = [...prevLekser, lekse];
-         return updatedLekser;
-      });
+      setLekser([...lekser, lekse]);
+   };
+   const completeLekse = (lekse: string) => {
+      setLekser(lekser.filter((item) => item !== lekse));
+   };
+   const startEditingLekse = (index: number) => {
+      if (editingLekse === index) {
+         // Cancel editing
+         setEditingLekse(undefined);
+         setEditingText("");
+      } else {
+         // Start editing
+         setEditingLekse(index);
+         setEditingText(lekser[index]);
+      }
+   };
+   const saveLekse = () => {
+      if (editingLekse !== undefined) {
+         const updatedLekser = [...lekser];
+         updatedLekser[editingLekse] = editingText;
+         setLekser(updatedLekser);
+         setEditingLekse(undefined);
+         setEditingText("");
+      }
    };
 
-   const handleEdit = () => {
-      setIsEditing(!isEditing);
+   //
+   //
+   //
+   //
+   //LEKSE COMPONENT--------------------
+   interface LekseProps {
+      lekse: string;
+      index: number;
+      onCompletetion: (lekse: string) => void;
+      onEdit: (index: number) => void;
+      onSave: () => void;
+   }
+   const Lekse = ({ lekse, index, onCompletetion, onEdit, onSave }: LekseProps) => {
+      const inputRef = useRef<HTMLInputElement>(null);
+
+      useEffect(() => {
+         // Focus the input when editing starts
+         if (editingLekse === index && inputRef.current) {
+            inputRef.current.focus();
+         }
+      }, [editingLekse, index]);
+
+      const handleCompletion = () => {
+         onCompletetion(lekse);
+      };
+      const handleLekseChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+         setEditingText(e.target.value);
+      };
+      return (
+         <div className="flex flex-row space-bet place-content-between">
+            <div className="flex flex-row gap-2">
+               <input type="checkbox" onChange={handleCompletion} />
+               {editingLekse === index ? (
+                  <input
+                     ref={inputRef}
+                     type="text"
+                     value={editingText}
+                     onChange={handleLekseChange}
+                  />
+               ) : (
+                  <p>{lekse}</p>
+               )}
+            </div>
+
+            {editingLekse === index ? (
+               <>
+                  <button className="right-0" onClick={onSave}>
+                     Save
+                  </button>
+                  <button className="right-0" onClick={() => onEdit(index)}>
+                     Cancel
+                  </button>
+               </>
+            ) : (
+               <button className="right-0" onClick={() => onEdit(index)}>
+                  Edit
+               </button>
+            )}
+         </div>
+      );
    };
 
-   const saveLekser = () => {
-      setLekser(newLekser);
-      setIsEditing(false);
-   };
-
-   const changeLekser = (lekser: string[]) => {
-      setNewLekser(lekser);
-   };
-
+   //LEKSE LISTE -----------
    return (
-      <div className="flex flex-col gap-2">
-         <button className="w-fit" onClick={handleEdit}>
-            Rediger
-         </button>
-         <button className="w-fit" onClick={saveLekser}>
-            Lagre
-         </button>
-
+      <div style={{ width: "35rem" }} className="flex flex-col gap-2 p-8 bg-gray-300/70 rounded-lg">
          {lekser.map((lekse, index) => (
             <Lekse
-               changeLekser={changeLekser}
-               currentLekser={lekser}
-               isEditing={isEditing}
-               key={index}
                index={index}
                lekse={lekse}
-               onRemove={removeLekse}
+               onCompletetion={completeLekse}
+               onEdit={startEditingLekse}
+               onSave={saveLekse}
             />
          ))}
          <AddLekse onAdd={addLekse} />
