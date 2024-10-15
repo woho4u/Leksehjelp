@@ -219,7 +219,7 @@ const Lekseliste = () => {
       return (
          <div className="flex flex-row space-bet place-content-between bg-green-500/50 rounded-md px-3">
             <div className="flex flex-row gap-2">
-               <input type="checkbox" onChange={handleCompletion} />
+               <input checked type="checkbox" onChange={handleCompletion} />
                <p>{lekse}</p>
             </div>
             <button className="right-0" onClick={() => onDelete(lekse)}>
