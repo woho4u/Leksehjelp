@@ -246,7 +246,7 @@ const Lekseliste = () => {
    return (
       <div style={{ width: "35rem" }} className="flex flex-col gap-2 p-8 bg-gray-300/70 rounded-lg">
          <AddLekse onAdd={addLekse} />
-         <h2 className="mt-3">Unfinished Homework</h2>
+         <h2 className="mt-3">Uferdige Lekser</h2>
          {lekser.map((lekse, index) => (
             <Lekse
                index={index}
@@ -257,7 +257,7 @@ const Lekseliste = () => {
                onDelete={deleteLekse}
             />
          ))}
-         <h2 className="mt-3">Completed Homework</h2>
+         <h2 className="mt-3">Fullførte Lekser</h2>
          {completedLekser.map((lekse, index) => (
             <CompletedLekse
                index={index}
