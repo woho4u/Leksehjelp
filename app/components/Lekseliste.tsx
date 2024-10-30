@@ -264,7 +264,7 @@ const Lekseliste = () => {
   return (
     <div
       style={{ width: "35rem" }}
-      className="flex flex-col gap-2 p-8 bg-gray-300/70 rounded-lg"
+      className="flex flex-col gap-2 p-8 shadow-lg rounded-lg test"
     >
       <AddLekse onAdd={addLekse} />
       <h2 className="mt-3">Uferdige Lekser</h2>
