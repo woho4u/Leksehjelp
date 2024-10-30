@@ -1,3 +1,3 @@
 # Leksehjelp
 
-En webapplikasjon for å planlegge lekser
+En enkel webapplikasjon for å planlegge lekser
